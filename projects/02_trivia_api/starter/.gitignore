@@ -2,6 +2,8 @@
 __pycache__
 venv
 /frontend/node_modules
+/backend/pipfile
+/backend/pipfile.lock
 
 # OS generated files #
 ######################
