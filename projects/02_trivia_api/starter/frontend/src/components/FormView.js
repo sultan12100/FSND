@@ -32,6 +32,10 @@ class FormView extends Component {
 
 
   submitQuestion = (event) => {
+    if(document.getElementById("defaultOption").selected)
+      this.state.category = 0;
+    else
+    this.state.category++;
     event.preventDefault();
     $.ajax({
       url: 'http://localhost:5000/questions', //TODO: update request URL (DONE)
@@ -89,8 +93,10 @@ class FormView extends Component {
           <label>
             Category
             <select name="category" onChange={this.handleChange}>
+            <option id="defaultOption" value="" selected></option>
               {Object.keys(this.state.categories).map(id => {
                   return (
+                    
                     <option key={id} value={id}>{this.state.categories[id].type}</option>
                   )
                 })}

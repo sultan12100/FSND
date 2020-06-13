@@ -1,7 +1,9 @@
 .vscode
 __pycache__
 venv
-/frontend/node_modules/*
+/frontend/node_modules
+/backend/pipfile
+/backend/pipfile.lock
 
 # OS generated files #
 ######################

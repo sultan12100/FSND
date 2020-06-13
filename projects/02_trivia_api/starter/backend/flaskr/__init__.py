@@ -144,7 +144,7 @@ def create_app(test_config=None):
   Try using the word "title" to start.
   '''
     @app.route('/questions', methods=['POST'])
-    def create_question():
+    def create_or_search_questions():
         body = request.get_json()
         # FormView
         error422 = False
@@ -156,7 +156,7 @@ def create_app(test_config=None):
                     answer = body['answer']
                     if not answer:
                         raise Exception
-                    category_id = int(body['category'])+1
+                    category_id = int(body['category'])
                     difficulty = int(body['difficulty'])
                     question_orm = Question(
                         question, answer, category_id, difficulty)
@@ -227,34 +227,55 @@ def create_app(test_config=None):
 
     @app.route('/quizzes', methods=['POST'])
     def play_quize_game():
-        body = request.get_json()
+        try:
+            body = request.get_json()
 
-        previous_questions_IDs = body.get('previous_questions')
-        quiz_category = body.get('quiz_category')
-        if quiz_category.get('type') != 'click':
-            quiz_category_id = int(quiz_category.get('type').get('id'))
-            questions = Question.query.filter(
-                Question.category == quiz_category_id).all()
-        else:
-            questions = Question.query.all()
+            previous_questions_IDs = body.get('previous_questions')
+            quiz_category = body.get('quiz_category')
 
-        questions_IDs = {
-            question.id for question in questions}  # returns set
-        list_of_possible_IDs = list(
-            set(questions_IDs) - set(previous_questions_IDs))
-        if len(list_of_possible_IDs) == 0:
+            '''
+            frontend returns quiz_category as {'type': 'click', 'id': 0} if user
+            chooses ALL instead of specific category, so this condition checks
+            if it is not ALL.
+            '''
+            if quiz_category.get('type') != 'click':
+
+                '''
+                frontend returns quize_category as
+                {'type': {'id': 1, 'type': 'Science'}, 'id': '0'}
+                if user chooses specific category, so this line of code takes the
+                id and return all questions with the category id in the database
+                '''
+                quiz_category_id = int(quiz_category.get('type').get('id'))
+
+                questions = Question.query.filter(
+                    Question.category == quiz_category_id).all()
+            else:  # if quiz_category is all
+                questions = Question.query.all()
+
+            questions_IDs = {
+                question.id for question in questions}  # converts to set of IDs
+
+            # does "set subtraction" by taking away previous Qs from Qs list
+            list_of_possible_IDs = list(
+                questions_IDs - set(previous_questions_IDs))
+            # if there was no possible Q then return no question
+            if len(list_of_possible_IDs) == 0:
+                return jsonify({
+                    'success': True,
+                    'question': None
+                })
+
+            # takes any random number from the list
+            random_question_id = random.choice(list_of_possible_IDs)
+            random_question = Question.query.filter(
+                Question.id == random_question_id).one_or_none()
             return jsonify({
-                'succes': True,
-                'question': None
+                'success': True,
+                'question': random_question.format()
             })
-
-        random_question_id = random.choice(list_of_possible_IDs)
-        random_question = Question.query.filter(
-            Question.id == random_question_id).one_or_none()
-        return jsonify({
-            'succes': True,
-            'question': random_question.format()
-        })
+        except:
+            abort(422)
 
     '''
   @TODO:
