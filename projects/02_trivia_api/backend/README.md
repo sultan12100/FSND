@@ -66,28 +66,323 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
 
+## API DOCUMENTATION
+### Errors
+#### 400 Bad Request
+```
+{
+   "success" : false,
+   "message" : "Bad Request",
+   "error" : 400
+}
+```
+#### 404 Not Found
+```
+{
+   "message" : "Not Found",
+   "success" : false,
+   "error" : 404
+}
+```
+#### 405 Method Not Allowed
+```
+{
+   "success" : false,
+   "message" : "Method Not Allowed",
+   "error" : 405
+}
+```
+#### 422 Unprocessable Entity
+```
+{
+   "success" : false,
+   "message" : "Unprocessable Entity",
+   "error" : 422
+}
+```
+#### 500 Internal Server Error
+```
+{
+   "success" : false,
+   "message" : "Internal Server Error",
+   "error" : 500
+}
+```
+### Resource endpoint library
 Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
+- GET '/categories'
+- GET '/questions'
+- DELETE '/questions/<int:question_id>'
+- POST '/questions'
+- GET '/categories/<int:category_id>/questions'
+- POST '/quizzes'
 
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+#### GET '/categories'
+- All categories:
+
+Request specefications:
+- String query: None
+- Arguments: None
+- Body: None
+
+curl localhost:5000/categories
+
+Response example:
+```
+{
+   "categories" : [
+      {
+         "type" : "Science",
+         "id" : 1
+      },
+      {
+         "type" : "Art",
+         "id" : 2
+      },
+      {
+         "id" : 3,
+         "type" : "Geography"
+      },
+      {
+         "type" : "History",
+         "id" : 4
+      },
+      {
+         "id" : 5,
+         "type" : "Entertainment"
+      },
+      {
+         "id" : 6,
+         "type" : "Sports"
+      }
+   ],
+   "success" : true,
+   "total_categories" : 6
+}
+```
+#### GET '/questions'
+- All questions:
+
+Request specefications:
+- String query: None
+- Arguments: None
+- Body: None
+
+curl localhost:5000/questions
+
+Response example:
+```
+{
+   "questions" : [
+      {
+         "answer" : "Apollo 13",
+         "category" : 5,
+         "question" : "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?",
+         "id" : 2,
+         "difficulty" : 4
+      },
+      {
+         "answer" : "Tom Cruise",
+         "category" : 5,
+         "question" : "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?",
+         "id" : 4,
+         "difficulty" : 4
+      },
+      {
+         "answer" : "Maya Angelou",
+         "category" : 4,
+         "question" : "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?",
+         "id" : 5,
+         "difficulty" : 2
+      },
+      {
+         "id" : 6,
+         "question" : "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?",
+         "difficulty" : 3,
+         "category" : 5,
+         "answer" : "Edward Scissorhands"
+      }
+   ],
+   "total_questions" : 4,
+   "success" : true,
+   "categories" : [
+      {
+         "type" : "Science",
+         "id" : 1
+      },
+      {
+         "type" : "Art",
+         "id" : 2
+      },
+      {
+         "type" : "Geography",
+         "id" : 3
+      },
+      {
+         "id" : 4,
+         "type" : "History"
+      },
+      {
+         "type" : "Entertainment",
+         "id" : 5
+      },
+      {
+         "type" : "Sports",
+         "id" : 6
+      }
+   ],
+   "current_category" : null
+}                             
+                                  
+```
+#### DELETE '/questions/&lt;int:question_id&gt;'
+- Deletes specific question:
+
+Request specefications:
+- String query: None
+- Arguments: id to specify the question from the collection
+- Body: None
+
+curl localhost:5000/questions/6 -X DELETE
+
+Response example:
+```
+{
+   "success" : true,
+   "deleted_question_id" : 6
+}
+                                  
+```
+#### POST '/questions'
+- Creates or searches questions:
+Request specefications:
+- String query: None
+- Arguments: None
+- Body:
+```
+{
+  "question": "who created Linux'?",
+  "answer": "Linus Torvalds",
+  "category": "4",
+  "difficulty": "4"
+  "searchTerm": "some pattern"
+}
+```
+##### to create a question
+
+Response example:
+```
+{
+    "question": {
+        "answer": "Linus Torvalds",
+        "category": 4,
+        "difficulty": 4,
+        "id": 25,
+        "question": "who created Linux'?"
+    },
+    "success": true
+}
+```
+##### to search for questions
+
+curl localhost:5000/questions -X POST -H 'Content-Type: application/json' -d '{"searchTerm": "wHaT"}'
+
+Response example:
+```
+{
+   "current_category" : null,
+   "success" : true,
+   "questions" : [
+      {
+         "answer" : "Apollo 13",
+         "difficulty" : 4,
+         "question" : "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?",
+         "category" : 5,
+         "id" : 2
+      },
+      {
+         "question" : "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?",
+         "category" : 5,
+         "difficulty" : 4,
+         "answer" : "Tom Cruise",
+         "id" : 4
+      }
+   ],
+   "total_questions" : 3
+}
+```
+#### GET '/categories/&lt;int:category_id&gt;/questions'
+- All questions that belong to specific category:
+
+Request specefications:
+- String query: None
+- Arguments: id to specify the category from the categories collection
+- Body: None
+
+curl localhost:5000/categories/4/questions
+
+Response example:
+```
+{
+   "current_category" : 4,
+   "questions" : [
+      {
+         "id" : 5,
+         "answer" : "Maya Angelou",
+         "difficulty" : 2,
+         "category" : 4,
+         "question" : "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+      },
+      {
+         "answer" : "Linus Torvalds",
+         "difficulty" : 4,
+         "id" : 25,
+         "category" : 4,
+         "question" : "who created Linux'?"
+      }
+   ],
+   "success" : true,
+   "total_questions" : 2
+}
+```
+#### POST '/quizzes'
+- Gets random question to play a game, out of the provided list of question IDs and in a specific category if provided:
+
+Request specefications:
+- String query: None
+- Arguments: None
+- Body: 
+```
+{
+  "previous_questions": "",
+  "quiz_category": {
+    "type": {
+      "id": "4",
+      "type": "History"
+    }
+  }
+}
+```
 
 ```
+curl localhost:5000/quizzes -H 'Content-Type: application/json' -d '{"previous_questions":"","quiz_category":{"type":{"id":"4","type":"History"}}}'
+```
+
+Response example:
+```
+{
+   "question" : {
+      "category" : 4,
+      "difficulty" : 4,
+      "id" : 25,
+      "question" : "who created Linux'?",
+      "answer" : "Linus Torvalds"
+   },
+   "success" : true
+}
+```
+
 
 
 ## Testing
