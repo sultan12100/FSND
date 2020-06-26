@@ -10,7 +10,7 @@ DEBUG = True
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:coder@localhost:5432/fyyur'
+SQLALCHEMY_DATABASE_URI = 'postgresql://localhost:5432/fyyur'
 
 # to disable a deprecated message
 SQLALCHEMY_TRACK_MODIFICATIONS = False
