@@ -3,9 +3,11 @@ from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
+import sys
 
 from .database.models import db_drop_and_create_all, setup_db, Drink
 from .auth.auth import AuthError, requires_auth
+
 
 app = Flask(__name__)
 setup_db(app)
@@ -17,7 +19,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers',
                          'Content-Type,Authorization,true')
     response.headers.add('Access-Control-Allow-Methods',
-                         'GET,POST,DELETE,OPTIONS')
+                         'GET,POST,DELETE,PATCH,OPTIONS')
     return response
 
 
@@ -97,7 +99,7 @@ def get_drinks_detail(payload):
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def create_drinks(payload):
-    error400 = True
+    error400 = True  # to catch errors from parsing request body
     try:
         body = request.get_json()
         drink = Drink(title=body['title'], recipe=json.dumps(body['recipe']))
@@ -133,14 +135,19 @@ def create_drinks(payload):
 @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def edit_drinks(payload, drink_id):
+    error400 = False
     try:
         body = request.get_json()
         drink = Drink.query.get(drink_id)
         if not drink:
             abort(404)
-        error400 = True
-        drink.title = body['title']
-        error400 = False
+        drink.title = body.get('title', None)
+        recipe = body.get('recipe', None)
+        if drink.title is None and recipe is None:
+            error400 = True
+            raise Exception
+        if recipe:
+            drink.recipe = json.dumps(recipe)
         drink.update()
         drink = [drink.long()]
         return jsonify({
@@ -148,7 +155,7 @@ def edit_drinks(payload, drink_id):
             "status": 200,
             "drinks": drink
         })
-    except Exception:
+    except Exception as e:
         if error400:
             abort(400)
         else:
@@ -241,19 +248,10 @@ def bad_request(error):
 '''
 
 
-@app.errorhandler(401)
-def unauthorized(error):
+@app.errorhandler(AuthError)
+def auth_error(error):
     return jsonify({
         "success": False,
-        "error": 401,
-        "message": "unauthorized"
-    }), 401
-
-
-@app.errorhandler(403)
-def forbidden(error):
-    return jsonify({
-        "success": False,
-        "error": 403,
-        "message": "forbidden"
-    }), 403
+        "error": error.status_code,
+        "message": error.error
+    }), error.status_code

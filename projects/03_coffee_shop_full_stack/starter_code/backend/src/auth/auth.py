@@ -12,7 +12,11 @@ API_AUDIENCE = 'coffee'
 # AuthError Exception
 '''
 AuthError Exception
-A standardized way to communicate auth failure modes
+A standardized way to communicate auth failure modes.
+and i used some of my code when i was practicing the course of
+(dentity and Access Management)
+https://github.com/sultan12100/FSND/blob/master/BasicFlaskAuth
+to verify and authorize
 '''
 
 
@@ -91,7 +95,7 @@ def check_permissions(permission, payload):
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'unauthorized',
-            'description': 'Permission not found.'
+            'description': f'Permission {permission} not found.'
         }, 403)
     return True
 
@@ -158,6 +162,11 @@ def verify_decode_jwt(token):
                 'description': 'Incorrect claims. Please, check the audience\
                      and issuer.'
             }, 401)
+        except jwt.JWTError:
+            raise AuthError({
+                'code': 'invalid_claims',
+                'description': 'signature invalid'
+            }, 401)
         except Exception:
             raise AuthError({
                 'code': 'invalid_header',
@@ -187,12 +196,10 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            try:
-                token = get_token_auth_header()
-                payload = verify_decode_jwt(token)
-                check_permissions(permission, payload)
-            except AuthError as e:
-                abort(e.status_code)
+            token = get_token_auth_header()
+            payload = verify_decode_jwt(token)
+            check_permissions(permission, payload)
+
             return f(payload, *args, **kwargs)
 
         return wrapper
