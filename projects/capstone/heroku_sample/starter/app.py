@@ -20,6 +20,10 @@ def create_app(test_config=None):
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
 
+    @app.route('/dbg')
+    def dbg():
+        return os.environ['DATABASE_URL']
+
     return app
 
 app = create_app()
