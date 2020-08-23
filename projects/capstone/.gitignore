@@ -4,3 +4,4 @@ Pipfile.lock
 
 # temp ignore TODO
 secret.sh
+setup.sh
