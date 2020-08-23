@@ -1,4 +1,7 @@
 Pipfile
 Pipfile.lock
 .vscode
+
+# temp ignore TODO
+setup.sh
 secret.sh
