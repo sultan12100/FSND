@@ -27,10 +27,11 @@ def setup_db(app, database_path=database_path):
 
 '''
 Movie
-Have title and release date
-rules:
-  passed release date must not be prior to current date
-  release date can be of any order if it is as follows mm-dd-y
+    Have title and release date
+    rules:
+      passed release date must not be prior to current date
+      release date can be of any order if it is as follows mm-dd-y
+      title and release_date are unique combinaiton
 '''
 
 
@@ -40,6 +41,10 @@ class Movie(db.Model):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     release_date = Column(String, nullable=False)
+
+    # set up unique combinaiton
+    __table_args__ = (db.UniqueConstraint(
+        'title', 'release_date', name='title_release_date_constraint'),)
 
     def __init__(self, title, release_date):
         self.title = title
@@ -65,9 +70,9 @@ class Movie(db.Model):
 
 '''
 release_date_checker(release_date)
-based on the algorithm in the project i worked on
-https://github.com/sultan12100/FSND/blob/master/projects/01_fyyur/app.py
-module format_datetime line: 136
+    based on the algorithm in the project i worked on
+    https://github.com/sultan12100/FSND/blob/master/projects/01_fyyur/app.py
+    module format_datetime line: 136
 '''
 
 
@@ -83,8 +88,10 @@ def release_date_checker(release_date):
 
 '''
 Actor
-Have name, age, and gender
-rules:
+    Have name, age, and gender
+    rules:
+      string that represent the gender must be of one length
+      the one character must be eaither m or f
 
 '''
 
@@ -123,7 +130,8 @@ class Actor(db.Model):
 
 '''
 gender_checker(gender_char)
-takes the gender (single) character and checks if it's m or f and of length 1
+    takes the gender (single) character and
+    checks if it's m or f and of length 1
 '''
 
 
