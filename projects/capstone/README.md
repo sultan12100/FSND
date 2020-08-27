@@ -416,7 +416,7 @@ Example response:
 }
 ```
 ## Authentication Setup
-the steps i followed to setup 3rd party Authentication system auth0 :-
+the steps i followed to setup 3rd party authentication system auth0 :-
 1. Create a new Auth0 Account
 2. Select a unique tenant domain
 3. Create a new, regular web application
