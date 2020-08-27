@@ -2,12 +2,12 @@
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
 live url: https://casting-agency-fsnd-prjct.herokuapp.com
 ```
-├── CastingAgency.postman_collection.json
-├── Procfile
-├── app.py
-├── auth.py
-├── manage.py
-├── migrations
+├── CastingAgency.postman_collection.json # collection of requests to test RBAC controls, and can be imported by postman
+├── Procfile # a recognized file by heroku, and it will be used it to tell heroku which WSGI Server to use with our app
+├── app.py  # main file to run the application
+├── auth.py # contains teh authentication logic
+├── manage.py # implemnted using flask_script to run flask-migrate command through and to use it in heroku's production environment
+├── migrations # folder managed by flask-migrate
 │   ├── README
 │   ├── alembic.ini
 │   ├── env.py
@@ -17,13 +17,13 @@ live url: https://casting-agency-fsnd-prjct.herokuapp.com
 │       ├── 781514ca1ada_.py
 │       ├── 9c9dabdae17e_.py
 │       └── daaf819e8285_.py
-├── models.py
-├── requirements.txt
-├── setup.sh
-└── test_app.py
+├── models.py  # business logic of data modeling using ORM library
+├── requirements.txt # contains all packages to run the application along with their versions. used by pip to install
+├── setup.sh   # contains enviornment variables used by the application and it conntains tokens for inspection purposes
+└── test_app.py   # used to test api endpoints
 ```
 ## Getting Started
-# Initial Setup
+## Initial Setup
 1. Fork this project to your Github account.
 2. Locally clone your forked version to begin working on the project.
 ### Installing Dependencies
@@ -42,7 +42,7 @@ We recommend working within a virtual environment whenever using Python for proj
 Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
 
 ```bash
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 This will install all of the required dependencies to run the application.
@@ -71,7 +71,7 @@ for API endpoints testing purposes.
 ## Database Setup
 With Postgres running, create database named `casting_agency` using createdb tool:
 ```bash
-createdb casting_agency
+$ createdb casting_agency
 ```
 
 ## Running the server
@@ -81,8 +81,9 @@ From within the `backend` directory first ensure you are working using your crea
 To run the server, execute:
 
 ```bash
-export FLASK_APP=app.py
-flask run --reload
+$ source setup.sh
+$ export FLASK_APP=app.py
+$ flask run --reload
 ```
 
 Setting the `FLASK_APP` variable to `app.py` directs flask to run `app.py` whenever `flask run` is issued.
@@ -90,7 +91,7 @@ Setting the `FLASK_APP` variable to `app.py` directs flask to run `app.py` whene
 The `--reload` flag will detect file changes and restart the server automatically.
 
 
-## API DOCUMENTATION
+## API Documentation
 ### Base URL
 you can use `http://127.0.0.1:5000` if you want to test the application locally or use `https://casting-agency-fsnd-prjct.herokuapp.com`
 ### Errors
@@ -416,7 +417,7 @@ Example response:
 }
 ```
 ## Authentication Setup
-the steps i followed to setup 3rd party Authentication system auth0 :-
+the steps i followed to setup 3rd party authentication system auth0 :-
 1. Create a new Auth0 Account
 2. Select a unique tenant domain
 3. Create a new, regular web application
@@ -470,32 +471,35 @@ the steps i followed to setup 3rd party Authentication system auth0 :-
         
         grant_type=authorization_code&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&code=AUTHORIZATION_CODE&redirect_uri=https://YOUR_APP/callback
         ```
+        and if you want to logout then use this url `https://YOUR_DOMAIN/v2/logout`
 
 ## Endpoints Testing
-``` bash
+``` 
+$ source setup.sh
 $ dropdb casting_agency
 $ createdb casting_agency
 $ python test_app.py
 ```
 ## RBAC Controls Testing
 Test endpoints with [Postman](https://getpostman.com). 
-    - Import the postman collection `./CastingAgency.postman_collection.json.json`
-    - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
+   - Import the postman collection `./CastingAgency.postman_collection.json.json`
+   - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
     -
 ## Deployment
-``` bash
-git init
-heroku create app-name
-git remote -v # check if it is connected to heroku
-git remote add heroku git_repo_url # if not, connecte it to your app heroku repo
-heroku addons:create heroku-postgresql:hobby-dev --app app-name # add free tier postgres service
-heroku config --app casting-agency-fsnd-prjct # check database url
+[heroku](https://heroku.com/) is the cloud enviornment of choice, create an acount if you don't have and install the cli tool from [here](https://devcenter.heroku.com/categories/command-line) and use `heroku login` command to set your credentials.
+``` 
+$ git init
+$ heroku create app-name
+$ git remote -v # check if it is connected to heroku
+$ git remote add heroku git_repo_url # if not, connecte it to your app heroku repo
+$ heroku addons:create heroku-postgresql:hobby-dev --app app-name # add free tier postgres service
+$ heroku config --app casting-agency-fsnd-prjct # check database url
 # add environment variables to app using heroku web interface like AUTH0_DOMAIN, ALGORITHMS, API_AUDIENCE 
-pip freeze > requirements.txt # update requirements.txt
-git add .
-git commit -m 'add all'
-git push heroku master
-heroku run python manage.py db upgrade --app casting-agency-fsnd-prjct # instructing flask-migrate through manage.py to upgrade database schema to our database service or creates tables if it was not there for the first time
+$ pip freeze > requirements.txt # update requirements.txt
+$ git add .
+$ git commit -m 'add all'
+$ git push heroku master
+$ heroku run python manage.py db upgrade --app casting-agency-fsnd-prjct # instructing flask-migrate through manage.py to upgrade database schema to our database service or creates tables if it was not there for the first time
 ```
 ## Acknowledgment
 i would like to express my gratitude to Udacity, Misk, and our session lead Abdullah Alhamzani
