@@ -455,7 +455,7 @@ the steps i followed to setup 3rd party authentication system auth0 :-
           redirect_uri=https://YOUR_APP/callback&
         ```
         redirects and returns jwt token
-    - Authorization Code Flow recommended for regular web apps or testing use, where you can as a developer issue token that can expire in 7 days
+    - Authorization Code Flow recommended for regular web apps or testing use, where you can as a developer issue token that can expire in 7 days for example
         ```
         GET https://YOUR_DOMAIN/authorize?
           audience=API_IDENTIFIER&
