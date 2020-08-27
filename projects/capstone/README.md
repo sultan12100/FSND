@@ -474,9 +474,9 @@ the steps i followed to setup 3rd party authentication system auth0 :-
 
 ## Endpoints Testing
 ``` 
-$ source setup.sh
 $ dropdb casting_agency
 $ createdb casting_agency
+$ source setup.sh
 $ python test_app.py
 ```
 ## RBAC Controls Testing
