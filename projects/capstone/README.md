@@ -91,7 +91,7 @@ Setting the `FLASK_APP` variable to `app.py` directs flask to run `app.py` whene
 The `--reload` flag will detect file changes and restart the server automatically.
 
 
-## API DOCUMENTATION
+## API Documentation
 ### Base URL
 you can use `http://127.0.0.1:5000` if you want to test the application locally or use `https://casting-agency-fsnd-prjct.herokuapp.com`
 ### Errors
