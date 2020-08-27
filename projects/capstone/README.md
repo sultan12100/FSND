@@ -2,8 +2,8 @@
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
 live url: https://casting-agency-fsnd-prjct.herokuapp.com
 ```
-├── CastingAgency.postman_collection.json
-├── Procfile
+├── CastingAgency.postman_collection.json # collection of requests to test RBAC controls, and can be imported by postman
+├── Procfile # a recognized file by heroku, and it will be used it to tell heroku which WSGI Server to use with our app
 ├── app.py  # main file to run the application
 ├── auth.py # contains teh authentication logic
 ├── manage.py # implemnted using flask_script to run flask-migrate command through and to use it in heroku's production environment
@@ -19,8 +19,8 @@ live url: https://casting-agency-fsnd-prjct.herokuapp.com
 │       └── daaf819e8285_.py
 ├── models.py  # business logic of data modeling using ORM library
 ├── requirements.txt # contains all packages to run the application along with their versions. used by pip to install
-├── setup.sh   # contains enviornment variables used by
-└── test_app.py
+├── setup.sh   # contains enviornment variables used by the application and it conntains tokens for inspection purposes
+└── test_app.py   # used to test api endpoints
 ```
 ## Getting Started
 ## Initial Setup
