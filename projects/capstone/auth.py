@@ -144,7 +144,8 @@ def requires_auth(permission=''):
         def wrapper(*args, **kwargs):
 
             # if we are unit testing then ignore verifying and checking token
-            # sys.argv[0] contains the python script name that was initially run
+            # sys.argv[0] contains the python script file name
+            # that was initially run
             if sys.argv[0] == 'test_app.py':
                 return f(None, *args, **kwargs)
 
