@@ -471,6 +471,7 @@ the steps i followed to setup 3rd party authentication system auth0 :-
         
         grant_type=authorization_code&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&code=AUTHORIZATION_CODE&redirect_uri=https://YOUR_APP/callback
         ```
+        and if you want to logout then use this url `https://YOUR_DOMAIN/v2/logout`
 
 ## Endpoints Testing
 ``` 
