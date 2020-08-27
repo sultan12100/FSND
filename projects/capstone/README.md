@@ -23,7 +23,7 @@ live url: https://casting-agency-fsnd-prjct.herokuapp.com
 └── test_app.py
 ```
 ## Getting Started
-# Initial Setup
+## Initial Setup
 1. Fork this project to your Github account.
 2. Locally clone your forked version to begin working on the project.
 ### Installing Dependencies
