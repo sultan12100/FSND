@@ -487,7 +487,7 @@ Test endpoints with [Postman](https://getpostman.com).
 
 ## Deployment
 [heroku](https://heroku.com/) is the cloud enviornment of choice, create an acount if you don't have and install the cli tool from [here](https://devcenter.heroku.com/categories/command-line) and use `heroku login` command to set your credentials.
-deploying to heroku instructions
+- deploying to heroku instructions
 ``` 
 $ git init
 $ heroku create app-name
