@@ -59,9 +59,10 @@ class CastingAgencyTest(unittest.TestCase):
 
         self.db = db
         self.db.init_app(self.app)
+        
         # binds the app to the current context
         with self.app.app_context():
-            # create all tables
+            # creates all tables
             self.db.create_all()
 
     '''

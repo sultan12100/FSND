@@ -77,12 +77,15 @@ release_date_checker(release_date)
 
 
 def release_date_checker(release_date):
-    formated_release_date = babel.dates.format_datetime(
-        dateutil.parser.parse(release_date), "MM/dd/y")
-    formated_current_date = babel.dates.format_datetime(
-        dateutil.parser.parse(str(datetime.now())), "MM/dd/y")
-    if formated_release_date < formated_current_date:
+
+    # parse dates to compare between them
+    parsed_release_date = dateutil.parser.parse(release_date)
+    parsed_current_date = dateutil.parser.parse(str(datetime.now()))
+    if parsed_release_date < parsed_current_date:
         raise Exception
+    formated_release_date = babel.dates.format_datetime(
+        dateutil.parser.parse(str(parsed_release_date)), 'MM/dd/y')
+    # take the first term (date) and leave the second term (time)
     return formated_release_date
 
 
