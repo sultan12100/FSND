@@ -1,6 +1,6 @@
 # Full Stack Nanodegree Capston Project: Casting Agency
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
-
+live url: https://casting-agency-fsnd-prjct.herokuapp.com
 ```
 ├── CastingAgency.postman_collection.json
 ├── Procfile
@@ -63,7 +63,9 @@ This will install all of the required dependencies to run the application.
 
 - [python-jose](https://pypi.org/project/python-jose/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
-##### Postman
+- [gunicorn](https://gunicorn.org/) is a Python WSGI HTTP server, that will be used instead of [Werkzeug](https://werkzeug.palletsprojects.com/en/1.0.x/) when the application is deployed
+
+#### Postman
 for API endpoints testing purposes.
 
 ## Database Setup
@@ -89,6 +91,8 @@ The `--reload` flag will detect file changes and restart the server automaticall
 
 
 ## API DOCUMENTATION
+### Base URL
+you can use `http://127.0.0.1:5000` if you want to test the application locally or use `https://casting-agency-fsnd-prjct.herokuapp.com`
 ### Errors
 #### 400 Bad Request
 ```
@@ -130,6 +134,11 @@ The `--reload` flag will detect file changes and restart the server automaticall
    "error" : 500
 }
 ```
+#### 401 Unauthorized
+The client must pass authentication before access to this resource is granted. The server cannot validate the identity of the requested party.
+
+#### 403 Forbidden
+The client does not have permission to access the resource. Unlike 401, the server knows who is making the request, but that requesting party has no authorization to access the resource.
 ### Resource endpoint library
 Endpoints
 - GET '/movies'
@@ -148,7 +157,11 @@ Request specefications:
 - String query: None
 - Arguments: None
 - Body: None
-
+##### getting movies
+```
+curl --location --request GET 'http://127.0.0.1:5000/movies' \
+--header 'Authorization: Bearer <TOKEN>'
+```
 Response example:
 ```
 {
@@ -190,8 +203,12 @@ Request specefications:
 - String query: None
 - Arguments: None
 - Body: None
-
-Response example:
+##### getting actors
+```
+curl --location --request GET 'http://127.0.0.1:5000/actors' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+Example response:
 ```
 {
     "actors": [
@@ -213,15 +230,19 @@ Response example:
 }      
 ```
 #### DELETE '/mvoies/&lt;int:movie_id&gt;'
-- Deletes specific question:
+- Deletes specific movie:
 
 Request specefications:
 - String query: None
 - Arguments: id to specify a movie from the collection
 - Body: None
 
-
-Response example:
+##### deleting movie
+```
+curl --location --request DELETE 'http://127.0.0.1:5000/movies/21' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+Example response:
 ```
 {
     "id": 21,
@@ -230,15 +251,18 @@ Response example:
 }
 ```
 #### DELETE '/actors/&lt;int:actor_id&gt;'
-- Deletes specific question:
+- Deletes specific actor:
 
 Request specefications:
 - String query: None
 - Arguments: id to specify an actor from the collection
 - Body: None
-
-
-Response example:
+##### deleting actor
+```
+curl --location --request DELETE 'http://127.0.0.1:5000/actors/12' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+Example response:
 ```
 {
     "id": 12,
@@ -255,13 +279,13 @@ Request specefications:
 - Body:
     ```
     {
-       "title":"Star Wars 20",
-       "release_date":"1-26-2025"
+       "title":<MOVIE TITLE>,
+       "release_date":"<MOVIE RELEASE DATE"
     }
     ```
-##### adding the movie
+##### adding movie
 ```
-curl --location --request POST 'http://127.0.0.1:5000//movies' \
+curl --location --request POST 'http://127.0.0.1:5000/movies' \
 --header 'Authorization: Bearer <TOKEN>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -269,7 +293,7 @@ curl --location --request POST 'http://127.0.0.1:5000//movies' \
    "release_date":"1-26-2025"
 }'
 ```
-example Response:
+Example response:
 ```
 {
     "movie": {
@@ -295,7 +319,7 @@ Request specefications:
        "gender":"<ACTOR GENDER>"
     }
     ```
-##### adding the actor
+##### adding actor
 ```
 curl --location --request POST 'http://127.0.0.1:5000/actors' \
 --header 'Authorization: Bearer <TOKEN>' \
@@ -306,7 +330,7 @@ curl --location --request POST 'http://127.0.0.1:5000/actors' \
    "gender":"m"
 }'
 ```
-Response example:
+Example response:
 ```
 {
     "actor": {
@@ -319,12 +343,12 @@ Response example:
     "success": true
 }
 ```
-#### PATCH '/movies'
-- Adds movies:
+#### PATCH '/movies/<int:movie_id>'
+- Modifies movies:
 
 Request specefications:
 - String query: None
-- Arguments: None
+- Arguments: id to specify a movie from the collection
 - Body:
     ```
     {
@@ -333,7 +357,7 @@ Request specefications:
     }
     ```
 
-##### modifying the movie
+##### modifying movie
 ```
 curl --location --request PATCH 'http://127.0.0.1:5000/movies/14' \
 --header 'Authorization: Bearer <TOKEN>' \
@@ -342,7 +366,7 @@ curl --location --request PATCH 'http://127.0.0.1:5000/movies/14' \
    "title":"back to the future 11"
 }'
 ```
-example Response:
+Example response:
 ```
 {
     "movie": {
@@ -354,254 +378,124 @@ example Response:
     "success": true
 }
 ```
-
-#### GET '/categories/&lt;int:category_id&gt;/questions'
-- All questions that belong to specific category:
-
-Request specefications:
-- String query: None
-- Arguments: id to specify the category from the categories collection
-- Body: None
-
-curl localhost:5000/categories/4/questions
-
-Response example:
-```
-{
-   "current_category" : 4,
-   "questions" : [
-      {
-         "id" : 5,
-         "answer" : "Maya Angelou",
-         "difficulty" : 2,
-         "category" : 4,
-         "question" : "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
-      },
-      {
-         "answer" : "Linus Torvalds",
-         "difficulty" : 4,
-         "id" : 25,
-         "category" : 4,
-         "question" : "who created Linux'?"
-      }
-   ],
-   "success" : true,
-   "total_questions" : 2
-}
-```
-#### POST '/quizzes'
-- Gets random question to play a game, out of the provided list of question IDs and in a specific category if provided:
+#### PATCH '/actors/<int:actor_id>'
+- modifies actors:
 
 Request specefications:
 - String query: None
-- Arguments: None
-- Body: 
-```
-{
-  "previous_questions": "",
-  "quiz_category": {
-    "type": {
-      "id": "4",
-      "type": "History"
+- Arguments: id to specify an actor from the collection
+- Body:
+    ```
+    {
+            "name": "<NEW NAME>",
+            "age": "<NEW AGE>",
+            "gender": "<NEW GENDER>"
     }
-  }
-}
-```
+    ```
 
+##### modifying actor
 ```
-curl localhost:5000/quizzes -H 'Content-Type: application/json' -d '{"previous_questions":"","quiz_category":{"type":{"id":"4","type":"History"}}}'
+curl --location --request PATCH 'http://127.0.0.1:5000/actors/15' \
+--header 'Authorization: Bearer <TOKEN>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "age": 40
+}'
 ```
-
-Response example:
+Example response:
 ```
 {
-   "question" : {
-      "category" : 4,
-      "difficulty" : 4,
-      "id" : 25,
-      "question" : "who created Linux'?",
-      "answer" : "Linus Torvalds"
-   },
-   "success" : true
+    "actor": {
+        "age": 40,
+        "gender": "m",
+        "id": 15,
+        "name": "Rami Malek"
+    },
+    "status": 200,
+    "success": true
 }
 ```
+## Authentication Setup
+the steps i followed to setup 3rd party Authentication system auth0 :-
+1. Create a new Auth0 Account
+2. Select a unique tenant domain
+3. Create a new, regular web application
+4. Create a new API
+    - in API Settings:
+        - Enable RBAC
+        - Enable Add Permissions in the Access Token
+5. Create new API permissions:
+    - `get:movies`
+    - `get:actors`
+    - `post:movies`
+    - `post:actors`
+    - `patch:movies`
+    - `patch:actors`
+    - `delete:movies`
+    - `delete:actors`
+6. Create new roles for:
+    - Casting Assistant
+        - Can `get:movies` and `get:actors`
+    - Casting Director
+        - can perform all Casting Assistant actions  has and…
+        - can `post:actors` and `delete:actors`
+        - can `patch:actors` and `patch:actors`
+    - Executive Producer
+        - All permissions a Casting Director has and…
+        - can `post:movies` and `delete:movies`
+7. Obtain you JWT tokens
+    according to the [api docs](https://auth0.com/docs/api/authentication#authentication-methods) of auth0 there are two ways to login
+    - Implicit Flow recommended for front end use
+        ```
+        GET https://YOUR_DOMAIN/authorize?
+          audience=API_IDENTIFIER&
+          response_type=token
+          client_id=YOUR_CLIENT_ID&
+          redirect_uri=https://YOUR_APP/callback&
+        ```
+        redirects and returns jwt token
+    - Authorization Code Flow recommended for regular web apps or testing use, where you can as a developer issue token that can expire in 7 days
+        ```
+        GET https://YOUR_DOMAIN/authorize?
+          audience=API_IDENTIFIER&
+          scope=SCOPE&
+          response_type=code&
+          client_id=YOUR_CLIENT_ID&
+          redirect_uri=https://YOUR_APP/callback&
+        ```
+        redirects and returns AUTHORIZATION_CODE that can be used against POST /oauth/token endpoint to exchange Authorization Code for a token
+        ```
+        POST https://YOUR_DOMAIN/oauth/token
+        Content-Type: application/x-www-form-urlencoded
+        
+        grant_type=authorization_code&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&code=AUTHORIZATION_CODE&redirect_uri=https://YOUR_APP/callback
+        ```
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
-Dillinger is a cloud-enabled, mobile-ready, offline-storage, AngularJS powered HTML5 Markdown editor.
-
-  - Type some Markdown on the left
-  - See HTML in the right
-  - Magic
-
-# New Features!
-
-  - Import a HTML file and watch it magically convert to Markdown
-  - Drag and drop images (requires your Dropbox account be linked)
-
-
-You can also:
-  - Import and save files from GitHub, Dropbox, Google Drive and One Drive
-  - Drag and drop markdown and HTML files into Dillinger
-  - Export documents as Markdown, HTML and PDF
-
-Markdown is a lightweight markup language based on the formatting conventions that people naturally use in email.  As [John Gruber] writes on the [Markdown site][df1]
-
-> The overriding design goal for Markdown's
-> formatting syntax is to make it as readable
-> as possible. The idea is that a
-> Markdown-formatted document should be
-> publishable as-is, as plain text, without
-> looking like it's been marked up with tags
-> or formatting instructions.
-
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
-
-### Tech
-
-Dillinger uses a number of open source projects to work properly:
-
-* [AngularJS] - HTML enhanced for web apps!
-* [Ace Editor] - awesome web-based text editor
-* [markdown-it] - Markdown parser done right. Fast and easy to extend.
-* [Twitter Bootstrap] - great UI boilerplate for modern web apps
-* [node.js] - evented I/O for the backend
-* [Express] - fast node.js network app framework [@tjholowaychuk]
-* [Gulp] - the streaming build system
-* [Breakdance](https://breakdance.github.io/breakdance/) - HTML to Markdown converter
-* [jQuery] - duh
-
-And of course Dillinger itself is open source with a [public repository][dill]
- on GitHub.
-
-### Installation
-
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
-
-Install the dependencies and devDependencies and start the server.
-
-```sh
-$ cd dillinger
-$ npm install -d
-$ node app
+## Endpoints Testing
+``` bash
+$ dropdb casting_agency
+$ createdb casting_agency
+$ python test_app.py
 ```
-
-For production environments...
-
-```sh
-$ npm install --production
-$ NODE_ENV=production node app
+## RBAC Controls Testing
+Test endpoints with [Postman](https://getpostman.com). 
+    - Import the postman collection `./CastingAgency.postman_collection.json.json`
+    - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
+    -
+## Deployment
+``` bash
+git init
+heroku create app-name
+git remote -v # check if it is connected to heroku
+git remote add heroku git_repo_url # if not, connecte it to your app heroku repo
+heroku addons:create heroku-postgresql:hobby-dev --app app-name # add free tier postgres service
+heroku config --app casting-agency-fsnd-prjct # check database url
+# add environment variables to app using heroku web interface like AUTH0_DOMAIN, ALGORITHMS, API_AUDIENCE 
+pip freeze > requirements.txt # update requirements.txt
+git add .
+git commit -m 'add all'
+git push heroku master
+heroku run python manage.py db upgrade --app casting-agency-fsnd-prjct # instructing flask-migrate through manage.py to upgrade database schema to our database service or creates tables if it was not there for the first time
 ```
-
-### Plugins
-
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
-
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
-
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantaneously see your updates!
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-```sh
-$ node app
-```
-
-Second Tab:
-```sh
-$ gulp watch
-```
-
-(optional) Third:
-```sh
-$ karma test
-```
-#### Building for source
-For production release:
-```sh
-$ gulp build --prod
-```
-Generating pre-built zip archives for distribution:
-```sh
-$ gulp build dist --prod
-```
-### Docker
-Dillinger is very easy to install and deploy in a Docker container.
-
-By default, the Docker will expose port 8080, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
-
-```sh
-cd dillinger
-docker build -t joemccann/dillinger:${package.json.version} .
-```
-This will create the dillinger image and pull in the necessary dependencies. Be sure to swap out `${package.json.version}` with the actual version of Dillinger.
-
-Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 8000:8080 --restart="always" <youruser>/dillinger:${package.json.version}
-```
-
-Verify the deployment by navigating to your server address in your preferred browser.
-
-```sh
-127.0.0.1:8000
-```
-
-#### Kubernetes + Google Cloud
-
-See [KUBERNETES.md](https://github.com/joemccann/dillinger/blob/master/KUBERNETES.md)
-
-
-### Todos
-
- - Write MORE Tests
- - Add Night Mode
-
-License
-----
-
-MIT
-
-
-**Free Software, Hell Yeah!**
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
-
-   [dill]: <https://github.com/joemccann/dillinger>
-   [git-repo-url]: <https://github.com/joemccann/dillinger.git>
-   [john gruber]: <http://daringfireball.net>
-   [df1]: <http://daringfireball.net/projects/markdown/>
-   [markdown-it]: <https://github.com/markdown-it/markdown-it>
-   [Ace Editor]: <http://ace.ajax.org>
-   [node.js]: <http://nodejs.org>
-   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
-   [jQuery]: <http://jquery.com>
-   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>
-   [express]: <http://expressjs.com>
-   [AngularJS]: <http://angularjs.org>
-   [Gulp]: <http://gulpjs.com>
-
-   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>
-   [PlGh]: <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
-   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
-   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
-   [PlMe]: <https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md>
-   [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>
+## Acknowledgment
+i would like to express my gratitude to Udacity, Misk, and our session lead Abdullah Alhamzani
