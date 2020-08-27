@@ -280,8 +280,8 @@ Request specefications:
 - Body:
     ```
     {
-       "title":<MOVIE TITLE>,
-       "release_date":"<MOVIE RELEASE DATE"
+       "title":"<MOVIE TITLE>",
+       "release_date":"<MOVIE RELEASE DATE>"
     }
     ```
 ##### adding movie
@@ -316,7 +316,7 @@ Request specefications:
     ```
     {
        "name":"<ACTOR NAME>",
-       "age":<ACTOR AGE>,
+       "age":"<ACTOR AGE>",
        "gender":"<ACTOR GENDER>"
     }
     ```
@@ -459,7 +459,6 @@ the steps i followed to setup 3rd party authentication system auth0 :-
         ```
         GET https://YOUR_DOMAIN/authorize?
           audience=API_IDENTIFIER&
-          scope=SCOPE&
           response_type=code&
           client_id=YOUR_CLIENT_ID&
           redirect_uri=https://YOUR_APP/callback&
