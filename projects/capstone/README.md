@@ -481,8 +481,8 @@ $ python test_app.py
 ```
 ## RBAC Controls Testing
 Test endpoints with [Postman](https://getpostman.com). 
-    - Import the postman collection `./CastingAgency.postman_collection.json.json`
-    - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
+   - Import the postman collection `./CastingAgency.postman_collection.json.json`
+   - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
     -
 ## Deployment
 [heroku](https://heroku.com/) is the cloud enviornment of choice, create an acount if you don't have and install the cli tool from [here](https://devcenter.heroku.com/categories/command-line) and use `heroku login` command to set your credentials.
