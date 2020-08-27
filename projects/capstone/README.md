@@ -1,6 +1,6 @@
 # Full Stack Nanodegree Capston Project: Casting Agency
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
-live url: https://casting-agency-fsnd-prjct.herokuapp.com
+- live url: https://casting-agency-fsnd-prjct.herokuapp.com
 ```
 ├── CastingAgency.postman_collection.json # collection of requests to test RBAC controls, and can be imported by postman
 ├── Procfile # a recognized file by heroku, and it will be used it to tell heroku which WSGI Server to use with our app
