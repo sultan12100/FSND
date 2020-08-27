@@ -83,6 +83,7 @@ To run the server, execute:
 ```bash
 $ source setup.sh
 $ export FLASK_APP=app.py
+$ python manage.py db upgrade
 $ flask run --reload
 ```
 
