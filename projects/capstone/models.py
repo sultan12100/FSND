@@ -31,6 +31,8 @@ Movie
     rules:
       passed release date must not be prior to current date
       release date can be of any order if it is as follows mm-dd-y
+      if date was ambiguous, dateutil library will use mm/dd/yyyy
+        to format date so it is recommended to pass dates as mm-dd-y
       title and release_date are unique combinaiton
 '''
 

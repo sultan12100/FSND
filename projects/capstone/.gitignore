@@ -2,4 +2,4 @@ Pipfile
 Pipfile.lock
 .vscode
 secret.sh
-setup.sh
+CastingAgency.postman_collection.json
