@@ -317,7 +317,7 @@ Request specefications:
     ```
     {
        "name":"<ACTOR NAME>",
-       "age":"<ACTOR AGE>",
+       "age":<ACTOR AGE>,
        "gender":"<ACTOR GENDER>"
     }
     ```
@@ -390,7 +390,7 @@ Request specefications:
     ```
     {
             "name": "<NEW NAME>",
-            "age": "<NEW AGE>",
+            "age":<NEW AGE>,
             "gender": "<NEW GENDER>"
     }
     ```
