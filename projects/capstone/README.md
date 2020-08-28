@@ -1,6 +1,6 @@
 # Full Stack Nanodegree Capston Project: Casting Agency
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
-live url: https://casting-agency-fsnd-prjct.herokuapp.com
+- live url: https://casting-agency-fsnd-prjct.herokuapp.com
 ```
 ├── CastingAgency.postman_collection.json # collection of requests to test RBAC controls, and can be imported by postman
 ├── Procfile # a recognized file by heroku, and it will be used it to tell heroku which WSGI Server to use with our app
@@ -83,6 +83,7 @@ To run the server, execute:
 ```bash
 $ source setup.sh
 $ export FLASK_APP=app.py
+$ python manage.py db upgrade
 $ flask run --reload
 ```
 
@@ -280,8 +281,8 @@ Request specefications:
 - Body:
     ```
     {
-       "title":<MOVIE TITLE>,
-       "release_date":"<MOVIE RELEASE DATE"
+       "title":"<MOVIE TITLE>",
+       "release_date":"<MOVIE RELEASE DATE>"
     }
     ```
 ##### adding movie
@@ -316,7 +317,7 @@ Request specefications:
     ```
     {
        "name":"<ACTOR NAME>",
-       "age":<ACTOR AGE>,
+       "age":"<ACTOR AGE>",
        "gender":"<ACTOR GENDER>"
     }
     ```
@@ -455,11 +456,10 @@ the steps i followed to setup 3rd party authentication system auth0 :-
           redirect_uri=https://YOUR_APP/callback&
         ```
         redirects and returns jwt token
-    - Authorization Code Flow recommended for regular web apps or testing use, where you can as a developer issue token that can expire in 7 days
+    - Authorization Code Flow recommended for regular web apps or testing use, where you can as a developer issue token that can expire in 7 days for example
         ```
         GET https://YOUR_DOMAIN/authorize?
           audience=API_IDENTIFIER&
-          scope=SCOPE&
           response_type=code&
           client_id=YOUR_CLIENT_ID&
           redirect_uri=https://YOUR_APP/callback&
@@ -471,22 +471,23 @@ the steps i followed to setup 3rd party authentication system auth0 :-
         
         grant_type=authorization_code&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&code=AUTHORIZATION_CODE&redirect_uri=https://YOUR_APP/callback
         ```
-        and if you want to logout then use this url `https://YOUR_DOMAIN/v2/logout`
+        and if you want to logout then use this url `https://YOUR_DOMAIN/v2/logout` regardless of which flow
 
 ## Endpoints Testing
 ``` 
-$ source setup.sh
 $ dropdb casting_agency
 $ createdb casting_agency
+$ source setup.sh
 $ python test_app.py
 ```
 ## RBAC Controls Testing
 Test endpoints with [Postman](https://getpostman.com). 
    - Import the postman collection `./CastingAgency.postman_collection.json.json`
    - If you want to test the application at live, then change the `app_url` variable from the collection by right-clicking the collection folder >> edit >> navigate to variables tab >> change variable value to `https://casting-agency-fsnd-prjct.herokuapp.com`. Or keep it `http://127.0.0.1:5000` if you want to test the local app after running the server using `flask run --reload`
-    -
+
 ## Deployment
 [heroku](https://heroku.com/) is the cloud enviornment of choice, create an acount if you don't have and install the cli tool from [here](https://devcenter.heroku.com/categories/command-line) and use `heroku login` command to set your credentials.
+- deploying to heroku instructions
 ``` 
 $ git init
 $ heroku create app-name
