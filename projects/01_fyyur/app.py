@@ -41,7 +41,8 @@ venue_genre = db.Table('Venue_Genre',
                        )
 artist_genre = db.Table('Artist_Genre',
                         db.Column('artist_id', db.Integer,
-                                  db.ForeignKey('Artist.id'), primary_key=True),
+                                  db.ForeignKey('Artist.id'),
+                                  primary_key=True),
                         db.Column('genre_id', db.Integer,
                                   db.ForeignKey('Genre.id'), primary_key=True)
                         )
@@ -167,7 +168,6 @@ def venues():
     areas = db.session.query(Venue.city, Venue.state, func.count(
         Venue.id)).group_by(Venue.city).group_by(Venue.state).all()
     for area in areas:
-        print(area.city)
         area_dict = {}
         area_dict['city'] = area.city
         area_dict['state'] = area.state
@@ -215,7 +215,7 @@ def show_venue(venue_id):
     # shows the venue page with the given venue_id
     # TODO: replace with real venue data from the venues table, using venue_id
     error = False
-    try: 
+    try:
         data = db.session.query(Venue).get(venue_id)
         seeking_talent = False
         if data.seek:
@@ -230,7 +230,7 @@ def show_venue(venue_id):
                 past_shows.append(show)
             else:
                 upcoming_shows.append(show)
-    except:
+    except Exception:
         error = True
         print(sys.exc_info())
     finally:
@@ -276,7 +276,7 @@ def create_venue_submission():
         genre_list = []
         for genre_name in genre_names_list:
             genre = db.session.query(Genre)\
-                    .filter(Genre.name == genre_name).first()
+                .filter(Genre.name == genre_name).first()
             if genre:
                 genre_list.append(genre)
             else:
@@ -374,7 +374,7 @@ def artists():
 def search_artists():
     # TODO: implement search on artists with partial string search. Ensure
     # it is case-insensitive.
-    # seach for "A" should return "Guns N Petals", "Matt Quevado", and 
+    # seach for "A" should return "Guns N Petals", "Matt Quevado", and
     # "The Wild Sax Band".
     # search for "band" should return "The Wild Sax Band".
     pattern = request.form.get('search_term', '')
@@ -450,7 +450,7 @@ def edit_artist_submission(artist_id):
         genre_list = []
         for genre_name in genre_names_list:
             genre = db.session.query(Genre)\
-                    .filter(Genre.name == genre_name).first()
+                .filter(Genre.name == genre_name).first()
             if genre:
                 genre_list.append(genre)
             else:
@@ -510,7 +510,7 @@ def edit_venue_submission(venue_id):
         genre_list = []
         for genre_name in genre_names_list:
             genre = db.session.query(Genre)\
-                    .filter(Genre.name == genre_name).first()
+                .filter(Genre.name == genre_name).first()
             if genre:
                 genre_list.append(genre)
             else:
@@ -563,7 +563,7 @@ def create_artist_submission():
         genre_list = []
         for genre_name in genre_names_list:
             genre = db.session.query(Genre)\
-                    .filter(Genre.name == genre_name).first()
+                .filter(Genre.name == genre_name).first()
             if genre:
                 genre_list.append(genre)
             else:
@@ -588,9 +588,11 @@ def create_artist_submission():
         return redirect(url_for('index'))
     else:
         if not found:
-            flash('Artist ' + request.form['name'] + ' was successfully listed!')
+            flash('Artist ' + request.form['name'] +
+                  ' was successfully listed!')
         else:
-            flash('Artist ' + request.form['name'] + ' was successfully modified!')
+            flash('Artist ' + request.form['name'] +
+                  ' was successfully modified!')
         return render_template('pages/home.html')
 
     # called upon submitting the new artist listing form
@@ -673,7 +675,8 @@ if not app.debug:
     file_handler = FileHandler('error.log')
     file_handler.setFormatter(
         Formatter(
-            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+            '%(asctime)s %(levelname)s: \
+            %(message)s [in %(pathname)s:%(lineno)d]')
     )
     app.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)
