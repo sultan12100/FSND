@@ -35,7 +35,8 @@ class TriviaTestCase(unittest.TestCase):
             'difficulty': '',
         }
         self.existed_question_to_post = {
-            'question': "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?",
+            'question': "Whose autobiography is entitled 'I Know Why the Caged\
+                 Bird Sings'?",
             'answer': 'Maya Angelou',
             'category': '2',
             'difficulty': '4',
@@ -63,7 +64,8 @@ class TriviaTestCase(unittest.TestCase):
 
     """
     TODO
-    Write at least one test for each test for successful operation and for expected errors.
+    Write at least one test for each test for successful operation and for\
+         expected errors.
     """
 
     # testing of endpoint GET '/categories'
@@ -102,7 +104,8 @@ class TriviaTestCase(unittest.TestCase):
     # # DELETE '/questions/<int:question_id>'
     def test_delete_question(self):
         '''
-         deleting question  In which royal palace would you find the Hall of Mirrors?
+         deleting question  In which royal palace would you find the Hall of\
+              Mirrors?
         '''
         question_id = 14
         question_before = Question.query.filter(

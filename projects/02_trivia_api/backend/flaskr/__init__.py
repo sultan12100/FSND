@@ -115,7 +115,7 @@ def create_app(test_config=None):
                 'success': True,
                 'deleted_question_id': question_id
             })
-        except:
+        except Exception:
             if error404:
                 abort(404)
             else:
@@ -179,7 +179,7 @@ def create_app(test_config=None):
                     'total_questions': Question.query.count(),
                     'current_category': None
                 })
-        except:
+        except Exception:
             if error422:
                 abort(422)
             else:
@@ -208,7 +208,7 @@ def create_app(test_config=None):
                 'total_questions': len(category_questions),
                 'current_category': category_id
             })
-        except:
+        except Exception:
             abort(422)
 
     '''
@@ -232,17 +232,18 @@ def create_app(test_config=None):
             quiz_category = body.get('quiz_category')
 
             '''
-            frontend returns quiz_category as {'type': 'click', 'id': 0} if user
-            chooses ALL instead of specific category, so this condition checks
-            if it is not ALL.
+            frontend returns quiz_category as {'type': 'click', 'id': 0} if
+            user chooses ALL instead of specific category, so this condition
+            checks if it is not ALL.
             '''
             if quiz_category.get('type') != 'click':
 
                 '''
                 frontend returns quize_category as
                 {'type': {'id': 1, 'type': 'Science'}, 'id': '0'}
-                if user chooses specific category, so this line of code takes the
-                id and return all questions with the category id in the database
+                if user chooses specific category, so this line of code takes
+                the id and return all questions with the category id in
+                the database
                 '''
                 quiz_category_id = int(quiz_category.get('type').get('id'))
 
@@ -252,7 +253,7 @@ def create_app(test_config=None):
                 questions = Question.query.all()
 
             questions_IDs = {
-                question.id for question in questions}  # converts to set of IDs
+                question.id for question in questions}  # convert to set of IDs
 
             # does "set subtraction" by taking away previous Qs from Qs list
             list_of_possible_IDs = list(
@@ -272,7 +273,7 @@ def create_app(test_config=None):
                 'success': True,
                 'question': random_question.format()
             })
-        except:
+        except Exception:
             abort(422)
 
     '''
